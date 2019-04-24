@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using AspNetCoreTodo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AspNetCoreTodo.Services;
 
 namespace AspNetCoreTodo
 {
@@ -35,12 +36,16 @@ namespace AspNetCoreTodo
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<ITodoItemService, TodoItemService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
